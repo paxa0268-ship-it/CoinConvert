@@ -187,7 +187,6 @@
             cursor: pointer;
         }
 
-        /* Qo'shimcha Mashhur valyutalar bloki */
         .rates-table {
             margin-top: 20px;
             background: #0f172a;
@@ -215,7 +214,18 @@
             border-bottom: none;
         }
 
-        /* Footer va Privacy Policy */
+        /* Tashriflar sanagichi stili */
+        .visitor-count {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 12px;
+            color: #38bdf8;
+            background: rgba(56, 189, 248, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+
         footer {
             text-align: center;
             font-size: 11px;
@@ -274,6 +284,10 @@
             <div class="rate-row"><span>🇺🇸 1 USD</span><b id="usd-rate">...</b></div>
             <div class="rate-row"><span>🇪🇺 1 EUR</span><b id="eur-rate">...</b></div>
             <div class="rate-row"><span>🇷🇺 1 RUB</span><b id="rub-rate">...</b></div>
+        </div>
+
+        <div class="visitor-count">
+            👁️ Jami tashriflar: <b id="visits">...</b>
         </div>
     </div>
 
@@ -336,7 +350,6 @@
             }
         }
 
-        // Asosiy kurslarni (USD, EUR, RUB) pastdagi jadvalga chiqarish
         async function fetchMainRates() {
             try {
                 let res = await fetch(`https://open.er-api.com/v6/latest/USD`);
@@ -349,6 +362,17 @@
                 document.getElementById("eur-rate").innerText = `${(uzsRate / eurRate).toFixed(2).toLocaleString()} UZS`;
                 document.getElementById("rub-rate").innerText = `${(uzsRate / rubRate).toFixed(2).toLocaleString()} UZS`;
             } catch (e) {}
+        }
+
+        // Tashrifchilar sonini hisoblash kodi
+        async function updateVisitorCount() {
+            try {
+                let res = await fetch("https://api.countapi.xyz/hit/coinconvert-paxa0268/visits");
+                let data = await res.json();
+                document.getElementById("visits").innerText = data.value.toLocaleString();
+            } catch (e) {
+                document.getElementById("visits").innerText = "1+";
+            }
         }
 
         fromSelect.addEventListener("change", () => { updateFlags(); fetchRates(); });
@@ -365,6 +389,7 @@
         updateFlags();
         fetchRates();
         fetchMainRates();
+        updateVisitorCount();
     </script>
 </body>
 </html>
