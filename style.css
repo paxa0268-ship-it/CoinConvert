@@ -1,164 +1,90 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+// Dunyo va O'zbekistondagi eng mashhur valyutalar ro'yxati va bayroqlari
+const currencyList = {
+    "USD": { country: "US", name: "AQSh Dollari" },
+    "UZS": { country: "UZ", name: "O'zbekiston So'mi" },
+    "EUR": { country: "FR", name: "Yevro" },
+    "RUB": { country: "RU", name: "Rossiya Rubli" },
+    "CNY": { country: "CN", name: "Xitoy Yuani" },
+    "TRY": { country: "TR", name: "Turkiya Lirasi" },
+    "GBP": { country: "GB", name: "Angliya Funt Sterlingi" },
+    "KZT": { country: "KZ", name: "Qozog'iston Tengesi" },
+    "AED": { country: "AE", name: "BAA Dirhami" },
+    "KRW": { country: "KR", name: "Janubiy Koreya Voni" },
+    "JPY": { country: "JP", name: "Yaponiya Yenasi" },
+    "CHF": { country: "CH", name: "Shveytsariya Franki" },
+    "CAD": { country: "CA", name: "Kanada Dollari" }
+};
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+const fromSelect = document.getElementById("from-currency");
+const toSelect = document.getElementById("to-currency");
+const amountInput = document.getElementById("amount");
+const resultAmount = document.getElementById("result-amount");
+const rateInfo = document.getElementById("rate-info");
+const fromFlag = document.getElementById("from-flag");
+const toFlag = document.getElementById("to-flag");
+const swapBtn = document.getElementById("swap-btn");
+const convertBtn = document.getElementById("convert-btn");
+const updateTime = document.getElementById("update-time");
+
+// Select tanlovlarini to'ldirish
+Object.keys(currencyList).forEach(code => {
+    let opt1 = new Option(`${code} - ${currencyList[code].name}`, code);
+    let opt2 = new Option(`${code} - ${currencyList[code].name}`, code);
+    
+    if (code === "USD") opt1.selected = true;
+    if (code === "UZS") opt2.selected = true;
+    
+    fromSelect.add(opt1);
+    toSelect.add(opt2);
+});
+
+function updateFlags() {
+    let fromCode = currencyList[fromSelect.value].country.toLowerCase();
+    let toCode = currencyList[toSelect.value].country.toLowerCase();
+    fromFlag.src = `https://flagcdn.com/w40/${fromCode}.png`;
+    toFlag.src = `https://flagcdn.com/w40/${toCode}.png`;
 }
 
-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 0 10px;
-    background: linear-gradient(135deg, #0f172a, #1e1b4b, #311042);
-    color: #fff;
+async function fetchRates() {
+    let amount = parseFloat(amountInput.value);
+    if (isNaN(amount) || amount <= 0) {
+        amount = 1;
+        amountInput.value = 1;
+    }
+
+    resultAmount.innerText = "Yuklanmoqda...";
+
+    try {
+        let response = await fetch(`https://open.er-api.com/v6/latest/${fromSelect.value}`);
+        let data = await response.json();
+        
+        let rate = data.rates[toSelect.value];
+        let total = (amount * rate).toLocaleString('en-US', { maximumFractionDigits: 2 });
+
+        resultAmount.innerText = `${total} ${toSelect.value}`;
+        rateInfo.innerText = `1 ${fromSelect.value} = ${rate.toLocaleString()} ${toSelect.value}`;
+        
+        let now = new Date();
+        updateTime.innerText = `Oxirgi yangilanish: ${now.toLocaleTimeString()}`;
+    } catch (e) {
+        resultAmount.innerText = "Xatlik yuz berdi";
+        rateInfo.innerText = "Internet aloqasini tekshiring";
+    }
 }
 
-.container {
-    width: 370px;
-    padding: 30px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.07);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-}
+// Eventlar
+fromSelect.addEventListener("change", () => { updateFlags(); fetchRates(); });
+toSelect.addEventListener("change", () => { updateFlags(); fetchRates(); });
+convertBtn.addEventListener("click", fetchRates);
 
-.container h2 {
-    font-size: 24px;
-    font-weight: 700;
-    text-align: center;
-    color: #38bdf8;
-}
+swapBtn.addEventListener("click", () => {
+    let temp = fromSelect.value;
+    fromSelect.value = toSelect.value;
+    toSelect.value = temp;
+    updateFlags();
+    fetchRates();
+});
 
-.container .subtitle {
-    font-size: 12px;
-    text-align: center;
-    color: #94a3b8;
-    margin-bottom: 25px;
-}
-
-.amount-box label, .drop-list label {
-    font-size: 13px;
-    color: #cbd5e1;
-    margin-bottom: 5px;
-    display: block;
-}
-
-.amount-box input {
-    width: 100%;
-    height: 45px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    outline: none;
-    font-size: 17px;
-    padding: 0 15px;
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
-    transition: 0.3s;
-}
-
-.amount-box input:focus {
-    border-color: #38bdf8;
-}
-
-.drop-list {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.drop-list .select-box {
-    display: flex;
-    align-items: center;
-    width: 120px;
-    height: 45px;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.05);
-    padding: 0 5px;
-}
-
-.select-box img {
-    max-width: 25px;
-    border-radius: 3px;
-}
-
-.select-box select {
-    width: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #fff;
-    font-size: 14px;
-    margin-left: 5px;
-    cursor: pointer;
-}
-
-.select-box select option {
-    background: #1e1b4b;
-    color: #fff;
-}
-
-.drop-list .icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(56, 189, 248, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: 0.3s;
-}
-
-.drop-list .icon:hover {
-    background: #38bdf8;
-    color: #000;
-}
-
-.exchange-rate {
-    font-size: 18px;
-    font-weight: 600;
-    text-align: center;
-    margin: 20px 0 5px 0;
-    color: #4ade80;
-}
-
-.inverse-rate {
-    font-size: 12px;
-    text-align: center;
-    color: #94a3b8;
-    margin-bottom: 20px;
-}
-
-button {
-    width: 100%;
-    height: 45px;
-    border: none;
-    border-radius: 10px;
-    background: #38bdf8;
-    color: #0f172a;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-button:hover {
-    background: #0284c7;
-    color: #fff;
-}
-
-.last-updated {
-    font-size: 11px;
-    text-align: center;
-    color: #64748b;
-    margin-top: 15px;
-}
+// Boshlang'ich ishga tushirish
+updateFlags();
+fetchRates();
