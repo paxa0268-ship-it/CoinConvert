@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoinConvert - Valyuta Konvertori</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2><i class="fa-solid fa-coins"></i> CoinConvert</h2>
+        <p class="subtitle">Jonli valyuta kurslari va tezkor hisoblagich</p>
+
+        <div class="amount-box">
+            <label>Summa</label>
+            <input type="number" id="amount" value="1" min="0.01" step="any">
+        </div>
+
+        <div class="drop-list">
+            <div class="from">
+                <label>Qaysi valyutadan</label>
+                <div class="select-box">
+                    <img src="https://flagcdn.com/w40/us.png" alt="flag" id="from-flag">
+                    <select id="from-currency"></select>
+                </div>
+            </div>
+
+            <div class="icon" id="swap-btn"><i class="fas fa-exchange-alt"></i></div>
+
+            <div class="to">
+                <label>Qaysi valyutaga</label>
+                <div class="select-box">
+                    <img src="https://flagcdn.com/w40/uz.png" alt="flag" id="to-flag">
+                    <select id="to-currency"></select>
+                </div>
+            </div>
+        </div>
+
+        <div class="exchange-rate" id="exchange-rate">Kurs yuklanmoqda...</div>
+        <div class="inverse-rate" id="inverse-rate"></div>
+
+        <button id="get-btn">Hisoblash</button>
+        
+        <div class="last-updated" id="last-updated"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
