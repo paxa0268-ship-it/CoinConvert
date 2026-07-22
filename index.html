@@ -3,46 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoinConvert - Valyuta Konvertori</title>
+    <title>CoinConvert - Pro FX</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <h2><i class="fa-solid fa-coins"></i> CoinConvert</h2>
-        <p class="subtitle">Jonli valyuta kurslari va tezkor hisoblagich</p>
 
-        <div class="amount-box">
-            <label>Summa</label>
-            <input type="number" id="amount" value="1" min="0.01" step="any">
+    <div class="card">
+        <div class="header">
+            <div class="logo">
+                <i class="fa-solid fa-bolt"></i>
+                <span>CoinConvert <b>PRO</b></span>
+            </div>
+            <div class="status-badge" id="live-status">
+                <span class="dot"></span> Live FX
+            </div>
         </div>
 
-        <div class="drop-list">
-            <div class="from">
-                <label>Qaysi valyutadan</label>
-                <div class="select-box">
-                    <img src="https://flagcdn.com/w40/us.png" alt="flag" id="from-flag">
+        <div class="input-group">
+            <label>Summa</label>
+            <div class="input-wrapper">
+                <input type="number" id="amount" value="100" min="0" placeholder="0.00">
+            </div>
+        </div>
+
+        <div class="converter-row">
+            <div class="select-card">
+                <span class="label">Sizda bor</span>
+                <div class="select-body">
+                    <img src="https://flagcdn.com/w40/us.png" id="from-flag" alt="flag">
                     <select id="from-currency"></select>
                 </div>
             </div>
 
-            <div class="icon" id="swap-btn"><i class="fas fa-exchange-alt"></i></div>
+            <button class="swap-btn" id="swap-btn" title="Almashtirish">
+                <i class="fa-solid fa-arrow-right-arrow-left"></i>
+            </button>
 
-            <div class="to">
-                <label>Qaysi valyutaga</label>
-                <div class="select-box">
-                    <img src="https://flagcdn.com/w40/uz.png" alt="flag" id="to-flag">
+            <div class="select-card">
+                <span class="label">Olasiz</span>
+                <div class="select-body">
+                    <img src="https://flagcdn.com/w40/uz.png" id="to-flag" alt="flag">
                     <select id="to-currency"></select>
                 </div>
             </div>
         </div>
 
-        <div class="exchange-rate" id="exchange-rate">Kurs yuklanmoqda...</div>
-        <div class="inverse-rate" id="inverse-rate"></div>
+        <div class="result-box">
+            <span class="result-label">Natija:</span>
+            <div class="result-amount" id="result-amount">0.00</div>
+            <div class="rate-info" id="rate-info">1 USD = 0 UZS</div>
+        </div>
 
-        <button id="get-btn">Hisoblash</button>
-        
-        <div class="last-updated" id="last-updated"></div>
+        <button class="convert-btn" id="convert-btn">
+            <i class="fa-solid fa-calculator"></i> Hisoblash
+        </button>
+
+        <div class="footer-info" id="update-time">
+            Kurslar real-vaqt rejimida yangilanadi
+        </div>
     </div>
 
     <script src="script.js"></script>
